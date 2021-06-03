@@ -131,6 +131,9 @@ class Creature():
     def collision(self, obj):
         return collide(obj, self)
 
+    def healthbar(self):
+        pygame.draw.rect(WINDOW, (180,0,0), (10, 6, 100, 8))
+        pygame.draw.rect(WINDOW, (0,180,0), (10, 6, 100 * (self.lp/self.max_lp), 8))
 
 
 
@@ -211,15 +214,16 @@ def main():
         lives_label = main_font.render(f"Lives: {lives}", 1, (255, 255, 255))
         level_label = main_font.render(f"Level: {level}", 1, (255, 255, 255))
         score_label = main_font.render(f"Score: {score}", 1, (255, 255, 255))
-        WINDOW.blit(lives_label, (10, 10))
-        WINDOW.blit(level_label, (10, 40))
-        WINDOW.blit(score_label, (WIDTH - score_label.get_width() - 10, 10))  # get_width() return the width of surfaces
+        WINDOW.blit(lives_label, (10, 20))
+        WINDOW.blit(level_label, (10, 50))
+        WINDOW.blit(score_label, (WIDTH - score_label.get_width() - 10, 20))  # get_width() return the width of surfaces
 
         # Creatures
         for creature in creatures:
             creature.draw()
 
         toad.draw()
+        toad.healthbar()
 
         if lost:
             lost_label = lost_font.render("You lost!",1,(255,255,255))
@@ -364,12 +368,30 @@ def main():
             if creature.y + creature.get_height() > HEIGHT - 80:
                 if creature.species == "fly" or creature.species == "mosquito" or creature.species == "ladybug" or creature.species == "snail":
                     lives -= 1
-                print(creature.species, creature.x)
+                    toad.lp -= 1
 
                 creatures.remove(creature)
 
 
 
+def main_menu():
+
+    title_font = pygame.font.SysFont("comicsans", 60)
+    run = True
+
+    while run:
+
+        WINDOW.blit(BACKGROUND, (0,0))
+        title_label = title_font.render("Press any key to begin...", 1, (255,255,255))
+        WINDOW.blit(title_label,(WIDTH/2 - title_label.get_width()/2, 400-title_label.get_height()))
+
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            if event.type == pygame.KEYUP:
+                main()
+    pygame.quit()
 
 
-main()
+main_menu()
