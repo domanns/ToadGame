@@ -82,9 +82,9 @@ class Creature():
         }
         SP_MAP = {
             "toad": (0),
-            "wasp": (-2),
-            "hornet": (-4),
-            "bug": (-2),
+            "wasp": (0),
+            "hornet": (0),
+            "bug": (0),
             "fly": (1),
             "snail": (1),
             "earthworm": (2),
@@ -159,16 +159,32 @@ def collide(obj1, obj2):
     return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) != None
 
 
+def rand_species(n, w_wasp, w_hornet, w_bug, w_fly, w_snail, w_earthworm, w_ladybug, w_mosquito):
+
+    list_of_creatures = [None, "wasp", 'hornet', 'bug', 'fly', 'snail', 'earthworm', 'ladybug', 'mosquito']
+
+    for i in range(1):
+        species = random.choices(list_of_creatures,
+                                 weights=[n, w_wasp, w_hornet, w_bug, w_fly, w_snail, w_earthworm, w_ladybug,w_mosquito],
+                                 k=1)
+    return species
+
+
+
 def main():
     run = True
     FPS = 60
 
     lives = 3
     score = 0
-    main_font = pygame.font.SysFont("comicsans", 40)
+    level = 1
+
+    main_font = pygame.font.SysFont("comicsans", 35)
     lost_font = pygame.font.SysFont("comicsans", 60)
 
-    list_of_creatures = [None,"wasp",'hornet', 'bug', 'fly', 'snail', 'earthworm', 'ladybug', 'mosquito']
+    is_jumping = False
+    jump_count = 10
+
     creatures = []
 
     toad = Creature('toad',500,630)
@@ -178,6 +194,7 @@ def main():
     lost = False
     lost_count = 0
 
+
     def redraw_window():
 
         # Background
@@ -185,9 +202,11 @@ def main():
 
         # Labels in the corners
         lives_label = main_font.render(f"Lives: {lives}", 1, (255, 255, 255))
-        level_label = main_font.render(f"Score: {score}", 1, (255, 255, 255))
+        level_label = main_font.render(f"Level: {level}", 1, (255, 255, 255))
+        score_label = main_font.render(f"Score: {score}", 1, (255, 255, 255))
         WINDOW.blit(lives_label, (10, 10))
-        WINDOW.blit(level_label, (WIDTH - level_label.get_width() - 10, 10))  # get_width() return the width of surfaces
+        WINDOW.blit(level_label, (10, 40))
+        WINDOW.blit(score_label, (WIDTH - score_label.get_width() - 10, 10))  # get_width() return the width of surfaces
 
         # Creatures
         for creature in creatures:
@@ -222,28 +241,102 @@ def main():
 
 
         for i in range(1):
-            species = random.choices(list_of_creatures, weights=[2000,4,1,2,2,1,1,1,2], k=1)
+
+            if score < 50:
+                level = 1
+            elif score >= 50 and score < 100:
+                level = 2
+            elif score >= 100 and score < 150:
+                level = 3
+            elif score >= 150:
+                level = (score + 50) // 50
+
+            if level == 1:
+                species = rand_species(1500, 3, 0, 0, 3, 0, 0, 0, 3)
+                if species[0] == None:
+                    pass
+                else:
+                    creature = Creature(species[0], random.randrange(10, WIDTH - 60), random.randrange(-200, -50))
+                    creatures.append(creature)
+
+            elif level == 2:
+                species = rand_species(2000, 3, 1, 0, 2, 0, 1, 0, 2)
+                if species[0] == None:
+                    pass
+                else:
+                    creature = Creature(species[0], random.randrange(10, WIDTH - 60), random.randrange(-200, -50))
+                    creatures.append(creature)
+
+            elif level == 3:
+                species = rand_species(2400, 5, 1, 1, 3, 1, 1, 1, 3)
+                if species[0] == None:
+                    pass
+                else:
+                    creature = Creature(species[0], random.randrange(10, WIDTH - 60), random.randrange(-200, -50))
+                    creatures.append(creature)
+
+            elif level > 3:
+                species = rand_species(2600, 5, 1, 1, 3, 1, 1, 1, 3)
+                if species[0] == None:
+                    pass
+                else:
+                    creature = Creature(species[0], random.randrange(10, WIDTH - 60), random.randrange(-200, -50))
+                    creatures.append(creature)
+
+                k = level - 3
+                for i in creatures:
+                    for j in range(k):
+                        i.speed *= 1.2
+
+
+
+            """ 
+            species = random.choices(list_of_creatures, weights=[2200,3,1,2,2,1,1,1,2], k=1)
             if species[0] == None:
                 pass
             else:
-                creature = Creature(species[0], random.randrange(10, WIDTH - 60), random.randrange(-500, -50))
+                creature = Creature(species[0], random.randrange(10, WIDTH - 60), random.randrange(-200, -50))
                 creatures.append(creature)
-
+            """
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
 
+        if not(is_jumping):
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_LEFT] and toad.x > 0:
+                toad.x -= toad.speed
+            if keys[pygame.K_RIGHT] and toad.x + toad.get_width() < WIDTH:
+                toad.x += toad.speed
+            if keys[pygame.K_SPACE]:
+                is_jumping = True
 
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT] and toad.x > 0:
-            toad.x -= toad.speed
-        if keys[pygame.K_RIGHT] and toad.x + toad.get_width() < WIDTH:
-            toad.x += toad.speed
+        elif is_jumping:
+            if jump_count >= -10:
+                k = 1
+                if jump_count < 0:
+                    k = -1
+                toad.y -= jump_count ** 2 * 0.5 * k
+                jump_count -= 1
+
+            else:
+                is_jumping = False
+                jump_count = 10
+
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_LEFT] and toad.x > 0:
+                toad.x -= toad.speed *2
+            if keys[pygame.K_RIGHT] and toad.x + toad.get_width() < WIDTH:
+                toad.x += toad.speed *2
+
+
+
 
 
         # Moving creatures and removing them whem they hit the ground
         for creature in creatures[:]:
+
             creature.move()
 
             if creature.collision(toad):
