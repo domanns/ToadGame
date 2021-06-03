@@ -28,25 +28,25 @@ MOSQUITO = pygame.image.load(os.path.join("pictures", "mosquito.png"))
 pygame.display.set_caption("Toad Game")
 pygame.display.set_icon(LOGO)
 
-""" 
-class Toad():
-    def __init__(self, x, y, score=0):
-        self.x = x
-        self.y = y
-        self.score = score
-        self.toad_img = pygame.image.load( (os.path.join("pictures","toad.png")) )
-
-        def draw(self, placement):
-            pygame.draw()
-"""
-
 
 class Creature():
+
     def __init__(self, species, x, y):
         self.species = species
         self.x = x
         self.y = y
 
+        SPEED_MAP = {
+            "toad": (5),
+            "wasp": (round(random.uniform(1.0,3.0), 1)),
+            "hornet": (round(random.uniform(0.5,1.5), 1)),
+            "bug": (round(random.uniform(0.5,1.5), 1)),
+            "fly": (round(random.uniform(1.0,3.0), 1)),
+            "snail": (round(random.uniform(0.5,1.0), 1)),
+            "earthworm": (round(random.uniform(3.5,4.5), 1)),
+            "ladybug": (round(random.uniform(1.0,1.5), 1)),
+            "mosquito": (round(random.uniform(0.5,1.5), 1)),
+        }
         IMG_MAP = {
             "toad": (TOAD),
             "wasp": (WASP),
@@ -58,17 +58,6 @@ class Creature():
             "ladybug": (LADYBUG),
             "mosquito": (MOSQUITO)
         }
-        SPEED_MAP = {
-            "toad": (5),
-            "wasp": (2),
-            "hornet": (1),
-            "bug": (2),
-            "fly": (2),
-            "snail": (1),
-            "earthworm": (2),
-            "ladybug": (1),
-            "mosquito": (1)
-        }
         LP_MAP = {
             "toad": (3),
             "wasp": (-1),
@@ -77,7 +66,7 @@ class Creature():
             "fly": (0),
             "snail": (0),
             "earthworm": (1),
-            "ladybug": (0),
+            "ladybug": (1),
             "mosquito": (0)
         }
         SP_MAP = {
@@ -85,9 +74,9 @@ class Creature():
             "wasp": (0),
             "hornet": (0),
             "bug": (0),
-            "fly": (1),
+            "fly": (2),
             "snail": (1),
-            "earthworm": (2),
+            "earthworm": (4),
             "ladybug": (1),
             "mosquito": (1)
         }
@@ -170,6 +159,24 @@ def rand_species(n, w_wasp, w_hornet, w_bug, w_fly, w_snail, w_earthworm, w_lady
     return species
 
 
+def rand_spawn_place(WIDTH):
+
+    height = -200
+    r = abs(height) // 50
+    c = WIDTH // 50
+    r_list = [i+1 for i in range(r)]
+    c_list = [i+1 for i in range(c)]
+
+    rand_c = random.choice(r_list) * 50 - 50
+    rand_r = random.choice(c_list) * (-50) - 50
+    if rand_c == 0:
+        rand_c += 1
+    elif rand_r == WIDTH - 50:
+        rand_c -= 1
+
+    return rand_r, rand_c
+
+
 
 def main():
     run = True
@@ -234,7 +241,7 @@ def main():
             lost_count += 1
 
         if lost:
-            if lost_count > FPS * 4:
+            if lost_count > FPS * 3:
                 run = False
             else:
                 continue
@@ -252,42 +259,45 @@ def main():
                 level = (score + 50) // 50
 
             if level == 1:
-                species = rand_species(1500, 3, 0, 0, 3, 0, 0, 0, 3)
+                species = rand_species(2000, 2, 0, 0, 8, 0, 0, 0, 8)
                 if species[0] == None:
                     pass
                 else:
-                    creature = Creature(species[0], random.randrange(10, WIDTH - 60), random.randrange(-200, -50))
+                    rand_r, rand_c = rand_spawn_place(WIDTH)
+                    #creature = Creature(species[0], random.randrange(10, WIDTH - 60), random.randrange(-200, -50))
+                    creature = Creature(species[0], rand_c, rand_r)
                     creatures.append(creature)
 
             elif level == 2:
-                species = rand_species(2000, 3, 1, 0, 2, 0, 1, 0, 2)
+                rand_r, rand_c = rand_spawn_place(WIDTH)
+                species = rand_species(2000, 2, 1, 0, 5, 0, 1, 0, 5)
                 if species[0] == None:
                     pass
                 else:
-                    creature = Creature(species[0], random.randrange(10, WIDTH - 60), random.randrange(-200, -50))
+                    creature = Creature(species[0], rand_c, rand_r)
                     creatures.append(creature)
+
 
             elif level == 3:
-                species = rand_species(2400, 5, 1, 1, 3, 1, 1, 1, 3)
+                rand_r, rand_c = rand_spawn_place(WIDTH)
+                species = rand_species(2000, 3, 1, 2, 4, 1, 1, 1, 4)
                 if species[0] == None:
                     pass
                 else:
-                    creature = Creature(species[0], random.randrange(10, WIDTH - 60), random.randrange(-200, -50))
+                    creature = Creature(species[0], rand_c, rand_r)
                     creatures.append(creature)
+
 
             elif level > 3:
-                species = rand_species(2600, 5, 1, 1, 3, 1, 1, 1, 3)
+
+                k = level - 2
+                rand_r, rand_c = rand_spawn_place(WIDTH)
+                species = rand_species(2000, k*2, k*1, k*1, k*3, k*1, k*1, k*1, k*2)
                 if species[0] == None:
                     pass
                 else:
-                    creature = Creature(species[0], random.randrange(10, WIDTH - 60), random.randrange(-200, -50))
+                    creature = Creature(species[0], rand_c, rand_r)
                     creatures.append(creature)
-
-                k = level - 3
-                for i in creatures:
-                    for j in range(k):
-                        i.speed *= 1.2
-
 
 
             """ 
@@ -303,15 +313,17 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
 
+        # Moving when not jumping
         if not(is_jumping):
             keys = pygame.key.get_pressed()
             if keys[pygame.K_LEFT] and toad.x > 0:
                 toad.x -= toad.speed
             if keys[pygame.K_RIGHT] and toad.x + toad.get_width() < WIDTH:
                 toad.x += toad.speed
-            if keys[pygame.K_SPACE]:
+            if keys[pygame.K_SPACE] or keys[pygame.K_UP]:
                 is_jumping = True
 
+        # Moving when jumping
         elif is_jumping:
             if jump_count >= -10:
                 k = 1
@@ -331,14 +343,12 @@ def main():
                 toad.x += toad.speed *2
 
 
-
-
-
         # Moving creatures and removing them whem they hit the ground
         for creature in creatures[:]:
 
             creature.move()
 
+            # Eating creatures
             if creature.collision(toad):
 
                 if (score + creature.sp) >= 0:
@@ -348,13 +358,14 @@ def main():
                     toad.lp += creature.lp
                     lives += creature.lp
 
-
                 creatures.remove(creature)
 
-
+            # Creatures hitting the ground
             if creature.y + creature.get_height() > HEIGHT - 80:
-                if creature.species == "fly" or creature.species == "mosquito" or creature.species == "ladybug" or creature.species == "snail" or creature.species == "earthworm":
+                if creature.species == "fly" or creature.species == "mosquito" or creature.species == "ladybug" or creature.species == "snail":
                     lives -= 1
+                print(creature.species, creature.x)
+
                 creatures.remove(creature)
 
 
