@@ -4,27 +4,35 @@ import os
 import time
 import saving_scores
 
-
+pygame.mixer.init()
 pygame.font.init()  # initializing font class
 
 WIDTH, HEIGHT = 1000, 800
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 
 # Loading images
-BACKGROUND = pygame.transform.scale(pygame.image.load(os.path.join('pictures', 'background_sized.png')),
+BACKGROUND = pygame.transform.scale(pygame.image.load(os.path.join('resources', 'background_sized.png')),
                                     (WIDTH, HEIGHT))
-LOGO = pygame.image.load(os.path.join("pictures", "logo.png"))
+LOGO = pygame.image.load(os.path.join("resources", "logo.png"))
 
 # Animals
-TOAD = pygame.image.load(os.path.join("pictures", "toad.png"))
-WASP = pygame.image.load(os.path.join("pictures", "wasp.png"))
-HORNET = pygame.image.load(os.path.join("pictures", "hornet.png"))
-BUG = pygame.image.load(os.path.join("pictures", "bug.png"))
-FLY = pygame.image.load(os.path.join("pictures", "fly.png"))
-SNAIL = pygame.image.load(os.path.join("pictures", "snail.png"))
-EARTHWORM = pygame.image.load(os.path.join("pictures", "earthworm.png"))
-LADYBUG = pygame.image.load(os.path.join("pictures", "ladybug.png"))
-MOSQUITO = pygame.image.load(os.path.join("pictures", "mosquito.png"))
+TOAD = pygame.image.load(os.path.join("resources", "toad.png"))
+WASP = pygame.image.load(os.path.join("resources", "wasp.png"))
+HORNET = pygame.image.load(os.path.join("resources", "hornet.png"))
+BUG = pygame.image.load(os.path.join("resources", "bug.png"))
+FLY = pygame.image.load(os.path.join("resources", "fly.png"))
+SNAIL = pygame.image.load(os.path.join("resources", "snail.png"))
+EARTHWORM = pygame.image.load(os.path.join("resources", "earthworm.png"))
+LADYBUG = pygame.image.load(os.path.join("resources", "ladybug.png"))
+MOSQUITO = pygame.image.load(os.path.join("resources", "mosquito.png"))
+
+# Sounds
+JUMP = pygame.mixer.Sound(os.path.join("resources", "jump.wav"))
+DAMAGE = pygame.mixer.Sound(os.path.join("resources", "damage.wav"))
+EATING = pygame.mixer.Sound(os.path.join("resources", "eating2.wav"))
+HEALING = pygame.mixer.Sound(os.path.join("resources", "healing.wav"))
+GAMEOVER = pygame.mixer.Sound(os.path.join("resources", "gameover.wav"))
+
 
 # Game name and logo
 pygame.display.set_caption("Toad Game")
@@ -244,13 +252,13 @@ def main():
 
         if lives <= 0 or toad.lp <= 0:
             lost = True
+            GAMEOVER.play()
             lost_count += 1
 
         if lost:
 
-            if lost_count > FPS * 3:
+            if lost_count > FPS * 2:
                 saving_scores.save_score(score)
-
                 run = False
             else:
                 continue
@@ -321,6 +329,7 @@ def main():
                 toad.x += toad.speed
             if keys[pygame.K_SPACE] or keys[pygame.K_UP]:
                 is_jumping = True
+                JUMP.play()
 
         # Moving when jumping
         elif is_jumping:
@@ -357,6 +366,13 @@ def main():
                     toad.lp += creature.lp
                     lives += creature.lp
 
+                if creature.species == "wasp" or creature.species == "hornet" or creature.species == "bug":
+                    DAMAGE.play()
+                elif creature.species == "earthworm" or creature.species == "ladybug":
+                    HEALING.play()
+                else:
+                    EATING.play()
+
                 creatures.remove(creature)
 
             # Creatures hitting the ground
@@ -364,6 +380,8 @@ def main():
                 if creature.species == "fly" or creature.species == "mosquito" or creature.species == "ladybug" or creature.species == "snail":
                     lives -= 1
                     toad.lp -= 1
+                    DAMAGE.play()
+
 
                 creatures.remove(creature)
 
