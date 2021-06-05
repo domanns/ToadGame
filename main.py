@@ -2,6 +2,8 @@ import pygame
 import random
 import os
 import time
+import saving_scores
+
 
 pygame.font.init()  # initializing font class
 
@@ -245,7 +247,10 @@ def main():
             lost_count += 1
 
         if lost:
+
             if lost_count > FPS * 3:
+                saving_scores.save_score(score)
+
                 run = False
             else:
                 continue
@@ -268,7 +273,6 @@ def main():
                     pass
                 else:
                     rand_r, rand_c = rand_spawn_place(WIDTH)
-                    #creature = Creature(species[0], random.randrange(10, WIDTH - 60), random.randrange(-200, -50))
                     creature = Creature(species[0], rand_c, rand_r)
                     creatures.append(creature)
 
@@ -303,15 +307,6 @@ def main():
                     creature = Creature(species[0], rand_c, rand_r)
                     creatures.append(creature)
 
-
-            """ 
-            species = random.choices(list_of_creatures, weights=[2200,3,1,2,2,1,1,1,2], k=1)
-            if species[0] == None:
-                pass
-            else:
-                creature = Creature(species[0], random.randrange(10, WIDTH - 60), random.randrange(-200, -50))
-                creatures.append(creature)
-            """
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -394,4 +389,4 @@ def main_menu():
     pygame.quit()
 
 
-main_menu()
+main()
