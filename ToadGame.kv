@@ -4,41 +4,129 @@
 
     size: root.width, root.height
 
-
     Label:
         text: "RULES"
         font_size: 55
         font_name:"IMPACT"
         size_hint: 0.5, 0.1
-        pos_hint: {'center_x': 0.19, 'top': 0.9}
-
+        pos_hint: {'center_x': 0.20, 'top': 0.9}
 
     Label:
-        text: """Use LEFT and RIGHT arrows to move the toad.\nUse SPACE or ARROW UP to jump.\n\nThe toad needs to eat! Swallow eatable creatures like flies, snails,\n earthworms or mosquitos and avoid the harming ones\nlike wasps, hornets or bugs which will take away your Lives.\nYou can regain Lives by eating earthworms and ladybugs.\n\nYou increase your Score by eating. The more animals you eat,\nthe higher your score.\n"""
+        text: """Use LEFT and RIGHT arrows to move the toad.\nUse SPACE or ARROW UP to jump.\n\nThe toad needs to eat! Swallow edible creatures like flies, snails,\n earthworms or mosquitos and avoid the harmful ones\nlike wasps, hornets or bugs, which will take away your Lives.\nYou can regain Lives by eating earthworms and ladybugs.\n\nYou increase your overall Score by eating.\nThe more animals you eat,the higher your score.\n"""
         font_size: 18
         size_hint: 0.8, 0.1
-        pos_hint: {'center_x': 0.5, 'top': 0.5}
+        pos_hint: {'center_x': 0.5, 'top': 0.45}
         halign: 'left'
 
 
+<AuthorWindow>
+
+    size: root.width, root.height
+
+    Label:
+        text: "ABOUT THE AUTHOR"
+        font_size: 55
+        font_name:"IMPACT"
+        size_hint: 0.5, 0.1
+        pos_hint: {'center_x': 0.4, 'top': 0.88}
+
+    Label:
+        text: """ToadGame was developed by Dominika Sachanbińska.\n\n\nFor icons and background elements credit to Freepik, Eucalyp,\nIcongeek26, Good Ware, Dinosoft Labs, Ddara, Smashicons \nfrom www.flaticon.com."""
+        font_size: 18
+        size_hint: 0.8, 0.1
+        pos_hint: {'center_x': 0.45, 'top': 0.5}
+        halign: 'left'
 
 
 <ScoresWindow>
 
+
+    size: root.width, root.height
+
     Label:
-        text: "RULES"
-        font_size: 30
+        text: "BEST SCORES"
+        font_size: 55
         font_name:"IMPACT"
-        size_hint: 1, 0.1
-        pos_hint: {'center_x': 0.5, 'top': 0.9}
+        size_hint: 0.5, 0.1
+        pos_hint: {'center_x': 0.50, 'top': 0.95}
 
     Label:
-        text: """1. You can use left and right arrows to move the toad.\n\n2. The toad needs to eat!"""
-        font_size: 13
+        text: "Score:                          Date: "
+        font_size: 35
+        font_name: "IMPACT"
+        size_hint: 0.8, 0.1
+        pos_hint: {'center_x': 0.5, 'top': 0.79}
+        halign: 'left'
 
-        size_hint: 0.7, 0.6
-        pos_hint: {'center_x': 0.5, 'top': 0.7}
+    Label:
+        text: "1.\n\n2.\n\n3."
+        font_size: 30
+        font_name: "IMPACT"
+        size_hint: 0.1, 0.5
+        pos_hint: {'center_x': 0.1, 'top': 0.7}
+        halign: 'left'
 
+    Label:
+        id: score1
+        text: f"{root.score1}"
+        font_size: 20
+        font_name: "IMPACT"
+        size_hint: 0.5, 0.5
+        pos_hint: {'center_x': 0.34, 'top': 0.87}
+        halign: 'center'
+
+    Label:
+        id: score2
+        text: f"{root.score2}"
+        font_size: 20
+        font_name: "IMPACT"
+        size_hint: 0.5, 0.5
+        pos_hint: {'center_x': 0.34, 'top': 0.69}
+        halign: 'center'
+
+    Label:
+        id: score3
+        text: f"{root.score3}"
+        font_size: 20
+        font_name: "IMPACT"
+        size_hint: 0.5, 0.5
+        pos_hint: {'center_x': 0.34, 'top': 0.52}
+        halign: 'center'
+
+    Label:
+        id: date1
+        text: f"{root.date1}"
+        font_size: 20
+        font_name: "IMPACT"
+        size_hint: 0.5, 0.5
+        pos_hint: {'center_x': 0.7, 'top': 0.87}
+        halign: 'center'
+
+    Label:
+        id: date2
+        text: f"{root.date2}"
+        font_size: 20
+        font_name: "IMPACT"
+        size_hint: 0.5, 0.5
+        pos_hint: {'center_x': 0.7, 'top': 0.69}
+        halign: 'center'
+
+    Label:
+        id: date3
+        text: f"{root.date3}"
+        font_size: 20
+        font_name: "IMPACT"
+        size_hint: 0.5, 0.5
+        pos_hint: {'center_x': 0.7, 'top': 0.52}
+        halign: 'center'
+
+    Button:
+        text: """CLEAN SCORES"""
+        font_name: "IMPACT"
+        font_size: 25
+        size_hint: 0.3, 0.12
+        pos_hint: {'center_x': 0.8, 'top': 0.15}
+        on_release: root.clean_scores()
 
 
 <Interface>
@@ -61,14 +149,7 @@
             size: root.width, root.height
             pos: 0,0
 
-
-            #Image:
-            #    source: 'pictures/toad.png'
-            #    size: root.width*0.01, root.height*0.01
-            #    pos: root.width*0.1, root.height*0.1
-
-
-            Label:      # Tytuł aplikacji
+            Label:
                 id: name
                 size_hint: 0.2, 0.1
                 pos_hint: {'center_x':0.5, 'top':0.9}
@@ -86,7 +167,7 @@
                 font_name: "IMPACT"
                 bold: True
                 background_color: 1.1, 1.4, 1, 1
-                #on_press:
+                on_release: root.start_game()
 
             Button:
                 id: rules
@@ -108,7 +189,7 @@
                 font_name: "IMPACT"
                 bold: True
                 background_color: 1.1, 1.4, 1, 1
-                #on_press:
+                on_press: root.show_scores()
 
             Button:
                 id: author
@@ -119,6 +200,6 @@
                 font_name: "IMPACT"
                 bold: True
                 background_color: 1.1, 1.4, 1, 1
-                #on_press:
+                on_press: root.show_about_author()
 
 

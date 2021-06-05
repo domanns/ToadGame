@@ -1,32 +1,44 @@
 #!/usr/bin/env python3
 
 import kivy
+import os
+import saving_scores
 
 from kivy.app import App
-from kivy.uix.widget import Widget
 from kivy.uix.popup import Popup
 from kivy.uix.floatlayout import FloatLayout
-from kivy.properties import ListProperty
-from kivy.properties import StringProperty
 from kivy.properties import ObjectProperty
-from kivy.base import ExceptionHandler
-from kivy.base import ExceptionManager
-from kivy.base import Logger
 
 kivy.require('2.0.0')
 
 def show_rules():
 
     show = RulesWindow()
-    rules = Popup(title="Rules", content=show, size_hint=(None,None), size=(650,500))
+    rules = Popup(title="Rules", content=show, size_hint=(None,None), size=(650,450))
     rules.open()
 
 
-def show_scores(new_cur, z):
+def show_scores():
 
     show = ScoresWindow()
     scores = Popup(title="Best scores", content=show, size_hint=(None, None), size=(650,500))
     scores.open()
+
+
+def show_about_author():
+
+    show = AuthorWindow()
+    about_author = Popup(title="About author", content=show, size_hint=(None,None), size=(650,450))
+    about_author.open()
+
+
+def start_game():
+
+    os.system("python main.py")
+
+
+def clean_scores():
+    saving_scores.init_csv()
 
 
 class RulesWindow(FloatLayout):
@@ -34,15 +46,43 @@ class RulesWindow(FloatLayout):
 
 
 class ScoresWindow(FloatLayout):
-    pass
 
+    scores_content = ObjectProperty()
+    score1 = ObjectProperty()
+    score2 = ObjectProperty()
+    score3 = ObjectProperty()
+    date1 = ObjectProperty()
+    date2 = ObjectProperty()
+    date3 = ObjectProperty()
+
+    dict = saving_scores.read_csv()
+
+    score1 = dict['scores'][0]
+    score2 = dict['scores'][1]
+    score3 = dict['scores'][2]
+
+    date1 = dict['dates'][0]
+    date2 = dict['dates'][1]
+    date3 = dict['dates'][2]
+
+    def clean_scores(self):
+        clean_scores()
+
+
+class AuthorWindow(FloatLayout):
+    pass
 
 
 class Interface(FloatLayout):
 
     def show_rules(self):
         show_rules()
-
+    def show_about_author(self):
+        show_about_author()
+    def start_game(self):
+        start_game()
+    def show_scores(self):
+        show_scores()
 
 
 class ToadGameApp(App):
