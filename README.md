@@ -1,4 +1,4 @@
-# FrogGame
+# ToadGame
 ### Author:
 Dominika Sachanbińska
 ### Short description:
