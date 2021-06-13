@@ -1,7 +1,6 @@
 import pygame
 import random
 import os
-import time
 import saving_scores
 
 pygame.mixer.init()
@@ -40,12 +39,14 @@ pygame.display.set_icon(LOGO)
 
 
 class Creature():
+    """ Main class for all ToadGame objects """
 
     def __init__(self, species, x, y):
         self.species = species
         self.x = x
         self.y = y
 
+        # Dict with random speed values
         SPEED_MAP = {
             "toad": (5),
             "wasp": (round(random.uniform(1.0,3.0), 1)),
@@ -57,6 +58,7 @@ class Creature():
             "ladybug": (round(random.uniform(1.0,1.5), 1)),
             "mosquito": (round(random.uniform(0.5,1.5), 1)),
         }
+        # Dict with images assigned to species
         IMG_MAP = {
             "toad": (TOAD),
             "wasp": (WASP),
@@ -68,6 +70,7 @@ class Creature():
             "ladybug": (LADYBUG),
             "mosquito": (MOSQUITO)
         }
+        # Dict with LifePoints for each species
         LP_MAP = {
             "toad": (3),
             "wasp": (-1),
@@ -79,6 +82,7 @@ class Creature():
             "ladybug": (1),
             "mosquito": (0)
         }
+        # Dict with ScorePoints for each species
         SP_MAP = {
             "toad": (0),
             "wasp": (0),
@@ -92,7 +96,6 @@ class Creature():
         }
 
         self.speed = SPEED_MAP[species]
-
         self.lp = LP_MAP[species]
         self.sp = SP_MAP[species]
         self.creature_img = IMG_MAP[species]
@@ -102,7 +105,9 @@ class Creature():
 
 
     def move(self):
+        """ moving function for all creatures except the toad """
 
+        # Zig-zag movement
         if (self.species == "wasp") or (self.species == "fly") or (self.species == "mosquito"):
 
             if self.x <= 0:
@@ -114,6 +119,7 @@ class Creature():
             self.y += abs(self.speed)/2
             self.x += self.speed
 
+        # Crawling movement
         elif (self.species == "bug") or (self.species == "snail") or (self.species == "ladybug"):
 
             if self.x <= 0:
@@ -126,6 +132,7 @@ class Creature():
 
             self.x += self.speed
 
+        # Straight movement
         else:
             self.y += self.speed
 
@@ -162,6 +169,11 @@ def collide(obj1, obj2):
 
 
 def rand_species(n, w_wasp, w_hornet, w_bug, w_fly, w_snail, w_earthworm, w_ladybug, w_mosquito):
+    """ choose a random species with weights given as parameters
+
+    :param n: weight of the 'none' elements
+    :return: species (string) - chosen species
+    """
 
     list_of_creatures = [None, "wasp", 'hornet', 'bug', 'fly', 'snail', 'earthworm', 'ladybug', 'mosquito']
 
@@ -173,8 +185,13 @@ def rand_species(n, w_wasp, w_hornet, w_bug, w_fly, w_snail, w_earthworm, w_lady
 
 
 def rand_spawn_place(WIDTH):
+    """ decide a random spawning place
 
-    height = -200
+    :param WIDTH: display window width
+    :return: rand_r (int), rand_c (int) - random x and y coordinates
+    """
+
+    height = -100
     r = abs(height) // 50
     c = WIDTH // 50
     r_list = [i+1 for i in range(r)]
@@ -192,27 +209,30 @@ def rand_spawn_place(WIDTH):
 
 
 def main():
+
     run = True
     FPS = 60
 
+    # Counters
     lives = 3
     score = 0
     level = 1
+    lost = False
+    lost_count = 0
 
+    # Fonts
     main_font = pygame.font.SysFont("comicsans", 35)
     lost_font = pygame.font.SysFont("comicsans", 60)
 
+    # Jump init
     is_jumping = False
     jump_count = 10
 
+    # Creatures init
     creatures = []
-
     toad = Creature('toad',500,630)
 
     clock = pygame.time.Clock()
-
-    lost = False
-    lost_count = 0
 
 
     def redraw_window():
@@ -235,10 +255,9 @@ def main():
         toad.draw()
         toad.healthbar()
 
-        if lost:
+        if lost:  # Display message
             lost_label = lost_font.render("You lost!",1,(255,255,255))
             WINDOW.blit(lost_label, (WIDTH/2 - lost_label.get_width()/2, 400))
-
 
 
         pygame.display.update()
@@ -249,14 +268,13 @@ def main():
         clock.tick(FPS)
         redraw_window()
 
-
+        # Check if player lost
         if lives <= 0 or toad.lp <= 0:
             lost = True
             GAMEOVER.play()
             lost_count += 1
 
         if lost:
-
             if lost_count > FPS * 2:
                 saving_scores.save_score(score)
                 run = False
@@ -266,6 +284,7 @@ def main():
 
         for i in range(1):
 
+            # Check level
             if score < 50:
                 level = 1
             elif score >= 50 and score < 100:
@@ -275,6 +294,8 @@ def main():
             elif score >= 150:
                 level = (score + 50) // 50
 
+
+            # Spawn according to player's level
             if level == 1:
                 species = rand_species(2000, 2, 0, 0, 8, 0, 0, 0, 8)
                 if species[0] == None:
@@ -286,13 +307,12 @@ def main():
 
             elif level == 2:
                 rand_r, rand_c = rand_spawn_place(WIDTH)
-                species = rand_species(2000, 2, 1, 0, 5, 0, 1, 0, 5)
+                species = rand_species(2000, 3, 1, 0, 5, 0, 1, 0, 5)
                 if species[0] == None:
                     pass
                 else:
                     creature = Creature(species[0], rand_c, rand_r)
                     creatures.append(creature)
-
 
             elif level == 3:
                 rand_r, rand_c = rand_spawn_place(WIDTH)
@@ -302,7 +322,6 @@ def main():
                 else:
                     creature = Creature(species[0], rand_c, rand_r)
                     creatures.append(creature)
-
 
             elif level > 3:
 
@@ -366,6 +385,7 @@ def main():
                     toad.lp += creature.lp
                     lives += creature.lp
 
+                # Playing collision sounds
                 if creature.species == "wasp" or creature.species == "hornet" or creature.species == "bug":
                     DAMAGE.play()
                 elif creature.species == "earthworm" or creature.species == "ladybug":
@@ -382,29 +402,7 @@ def main():
                     toad.lp -= 1
                     DAMAGE.play()
 
-
                 creatures.remove(creature)
-
-
-
-def main_menu():
-
-    title_font = pygame.font.SysFont("comicsans", 60)
-    run = True
-
-    while run:
-
-        WINDOW.blit(BACKGROUND, (0,0))
-        title_label = title_font.render("Press any key to begin...", 1, (255,255,255))
-        WINDOW.blit(title_label,(WIDTH/2 - title_label.get_width()/2, 400-title_label.get_height()))
-
-        pygame.display.update()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-            if event.type == pygame.KEYUP:
-                main()
-    pygame.quit()
 
 
 main()

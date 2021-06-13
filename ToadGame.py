@@ -38,6 +38,7 @@ def start_game():
 
 
 def clean_scores():
+
     saving_scores.init_csv()
 
 
@@ -55,15 +56,15 @@ class ScoresWindow(FloatLayout):
     date2 = ObjectProperty()
     date3 = ObjectProperty()
 
-    dict = saving_scores.read_csv()
+    no, scores, dates = saving_scores.read_csv()
 
-    score1 = dict['scores'][0]
-    score2 = dict['scores'][1]
-    score3 = dict['scores'][2]
+    score1 = scores[0]
+    score2 = scores[1]
+    score3 = scores[2]
 
-    date1 = dict['dates'][0]
-    date2 = dict['dates'][1]
-    date3 = dict['dates'][2]
+    date1 = dates[0]
+    date2 = dates[1]
+    date3 = dates[2]
 
     def clean_scores(self):
         clean_scores()
