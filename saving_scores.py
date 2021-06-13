@@ -1,72 +1,45 @@
 import pandas
 import datetime
-from pandas import DataFrame
 
 def save_score(score):
+    """ take a score and save it in best scores if it's better than any on the list
 
-    dict = read_csv()
+    :param score: score to check and save
+    :return: None
+    """
 
+    no, scores, dates = read_csv()
     today = datetime.date.today()
 
     i = 0
-    while i < len(dict['no']):
+    while i<len(scores):
 
-        if dict['scores'][i] < score:
+        if scores[i]<score:
 
-            if i < len( dict['no']) - 1 :      # are we NOT on the last score?
+            j = len(scores) - 2
 
-                if dict['scores'][i + 1] == 0:
+            while j>=i:
+                scores[j+1] = scores[j]
+                dates[j+1] = dates[j]
+                j -= 1
 
-                    # If the next score is equal 0 push the currently checked score to the next one and overwrite the current score
-                    dict['scores'][i+1] = dict['scores'][i]
-                    dict['dates'][i+1] = dict['dates'][i]
-                    dict['scores'][i] = score
-                    dict['dates'][i] = today
-
-
-                elif i < len(dict['no']) - 2:       # are we NOT on the one-before-last score?
-
-                    dict['scores'][i + 2] = dict['scores'][i + 1]
-                    dict['dates'][i + 2] = dict['dates'][i + 1]
-
-                    dict['scores'][i + 1] = dict['scores'][i]
-                    dict['dates'][i + 1] = dict['dates'][i]
-
-                    dict['scores'][i] = score
-                    dict['dates'][i] = today
-
-            elif i == len(dict['no'])-1:
-
-                dict['scores'][i] = score
-                dict['dates'][i] = today
-
+            scores[i] = score
+            dates[i] = today
             break
+        if scores[i] == score:
+            break
+        i += 1
 
-        elif dict['scores'][i] == score:
-
-            if dict['scores'][0] == dict['scores'][1] and dict['scores'][1] == dict['scores'][2]:
-                dict['scores'][0] = score
-                dict['dates'][0] = today
-                dict['scores'][0] = 0
-                dict['dates'][0] = 0
-
-            if dict['scores'][1] == dict['scores'][2] and dict['scores'][0] != dict['scores'][1]:
-                dict['scores'][1] = score
-                dict['dates'][1] = today
-                dict['scores'][2] = 0
-                dict['dates'][2] = 0
-            i += 1
-        else:
-            i += 1
-
+    dict = {'no': no, 'scores': scores, 'dates': dates}
     data = pandas.DataFrame(dict)
     data.to_csv('best_scores.csv')
 
 
-    return dict
-
-
 def read_csv():
+    """ read "best_scores.csv" file and unpack its content to three lists
+
+    :return: no (list), scores (list), dates (list) - lists with number of scores, scores and dates.
+    """
 
     file = "best_scores.csv"
     content = pandas.read_csv(file)
@@ -83,13 +56,14 @@ def read_csv():
     for i in dict['dates']:
         dates.append( dict['dates'][i] )
 
-    dict = {'no': no, 'scores': scores, 'dates': dates}
-
-    return dict
+    return no, scores, dates
 
 
 
 def init_csv():
+    """ initialize an empty .csv file
+    :return: None
+    """
 
     no = [i+1 for i in range(3)]
     scores = [ 0 for i in range(len(no)) ]
@@ -102,5 +76,7 @@ def init_csv():
 
 
 #init_csv()
+
+
 
 
