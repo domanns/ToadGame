@@ -10,27 +10,27 @@ WIDTH, HEIGHT = 1000, 800
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 
 # Loading images
-BACKGROUND = pygame.transform.scale(pygame.image.load(os.path.join('resources', 'background_sized.png')),
+BACKGROUND = pygame.transform.scale(pygame.image.load(os.path.join('resources',"images", 'background_sized.png')),
                                     (WIDTH, HEIGHT))
-LOGO = pygame.image.load(os.path.join("resources", "logo.png"))
+LOGO = pygame.image.load(os.path.join("resources","images", "logo.png"))
 
 # Animals
-TOAD = pygame.image.load(os.path.join("resources", "toad.png"))
-WASP = pygame.image.load(os.path.join("resources", "wasp.png"))
-HORNET = pygame.image.load(os.path.join("resources", "hornet.png"))
-BUG = pygame.image.load(os.path.join("resources", "bug.png"))
-FLY = pygame.image.load(os.path.join("resources", "fly.png"))
-SNAIL = pygame.image.load(os.path.join("resources", "snail.png"))
-EARTHWORM = pygame.image.load(os.path.join("resources", "earthworm.png"))
-LADYBUG = pygame.image.load(os.path.join("resources", "ladybug.png"))
-MOSQUITO = pygame.image.load(os.path.join("resources", "mosquito.png"))
+TOAD = pygame.image.load(os.path.join("resources","images", "toad.png"))
+WASP = pygame.image.load(os.path.join("resources","images", "wasp.png"))
+HORNET = pygame.image.load(os.path.join("resources","images", "hornet.png"))
+BUG = pygame.image.load(os.path.join("resources","images", "bug.png"))
+FLY = pygame.image.load(os.path.join("resources","images", "fly.png"))
+SNAIL = pygame.image.load(os.path.join("resources","images", "snail.png"))
+EARTHWORM = pygame.image.load(os.path.join("resources","images", "earthworm.png"))
+LADYBUG = pygame.image.load(os.path.join("resources","images", "ladybug.png"))
+MOSQUITO = pygame.image.load(os.path.join("resources","images", "mosquito.png"))
 
 # Sounds
-JUMP = pygame.mixer.Sound(os.path.join("resources", "jump.wav"))
-DAMAGE = pygame.mixer.Sound(os.path.join("resources", "damage.wav"))
-EATING = pygame.mixer.Sound(os.path.join("resources", "eating2.wav"))
-HEALING = pygame.mixer.Sound(os.path.join("resources", "healing.wav"))
-GAMEOVER = pygame.mixer.Sound(os.path.join("resources", "gameover.wav"))
+JUMP = pygame.mixer.Sound(os.path.join("resources","sounds", "jump.wav"))
+DAMAGE = pygame.mixer.Sound(os.path.join("resources","sounds", "damage.wav"))
+EATING = pygame.mixer.Sound(os.path.join("resources","sounds", "eating2.wav"))
+HEALING = pygame.mixer.Sound(os.path.join("resources","sounds", "healing.wav"))
+GAMEOVER = pygame.mixer.Sound(os.path.join("resources","sounds", "gameover.wav"))
 
 
 # Game name and logo
