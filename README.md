@@ -1,4 +1,4 @@
-# FrogGame
+# ToadGame
 ### Author:
 Dominika Sachanbińska
 ### Short description:
@@ -11,3 +11,5 @@ Clone the template project, replacing my-project with the name of the project yo
 
 Install the project's development and runtime requirements: 
 ```pip install -r requirements.txt```
+
+Run ```ToadGame.py``` file from the console or code editor.
