@@ -2,14 +2,17 @@
 ### Author:
 Dominika Sachanbińska
 ### Short description:
-A simple python game using pygame.
+A simple arcade-styled python game based on pygame module.
+
+<img src="resources/screenshot2.png" width=700>
+<img src="resources/screenshot.png" width=700>
 
 ### How to run this app?
 
-Clone the template project, replacing my-project with the name of the project you are creating: 
-```git clone https://github.com/DomAnnS/ToadGame my-project cd my-project```
+1. Clone the ToadGame repository replacing 'my-folder' with the directory you want to store ToadGame game in: 
+<br>```git clone https://github.com/DomAnnS/ToadGame my-folder cd my-folder```
 
-Install the project's development and runtime requirements: 
-```pip install -r requirements.txt```
+2. Install the project's development and runtime requirements: 
+<br>```pip install -r requirements.txt```
 
-Run ```ToadGame.py``` file from the console or code editor.
+3. Run ```ToadGame.py``` file from the console or in code editor.
